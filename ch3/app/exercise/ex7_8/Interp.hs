@@ -5,6 +5,7 @@ import Env
 
 --
 value_of :: Exp -> Env -> ExpVal
+
 value_of (Const_Exp n) env =
   Num_Val n
 -- Bool_Val은 return하지 않아도 되는지 의문
@@ -35,33 +36,45 @@ value_of (Let_Exp var exp1 body) env =
   let env1 = extend_env var (value_of exp1 env) env
   in value_of body env1
 
-value_of (Proc_Exp var body) env =
-  Proc_Val (procedure var body env)
+-- value_of for ex7_8
+value_of (Add_Exp exp1 exp2) env =
+  value_of (Diff_Exp exp1 (Diff_Exp (Const_Exp 0) exp2)) env
 
-value_of (Call_Exp rator rand) env =
-  apply_procedure f x
-  where f = expval_proc $ value_of rator env
-        x = value_of rand env
+value_of (Mul_Exp exp1 exp2) env =
+  let times = expval_num $ value_of exp2 env
+  in  if times < 0
+      then value_of (multiply (Diff_Exp (Const_Exp 0) exp1) (-times)) env
+      else value_of (multiply exp1 times) env
+      where multiply exp 0     = Const_Exp 0
+            multiply exp t = Add_Exp (multiply exp (t-1)) exp
 
--- Call_Exp dynamic scope ver.
-  -- let f = expval_proc $ value_of rator env
-  --     x = value_of rand env
-  -- in value_of (body f) $ extend_env (var f) x env
+value_of (Quot_Exp exp1 exp2) env =
+  let n1 = expval_num $ value_of exp1 env
+      n2 = expval_num $ value_of exp2 env
+    in Num_Val (div n1 n2)
 
+-- only for num
+value_of (IsEqual_Exp exp1 exp2) env =
+  value_of (IsZero_Exp (Diff_Exp exp1 exp2)) env 
+
+value_of (IsGreater_Exp exp1 exp2) env =
+  let n1 = expval_num $ value_of exp1 env
+      n2 = expval_num $ value_of exp2 env
+    in Bool_Val (n1 > n2)
+
+value_of (IsLess_Exp exp1 exp2) env =
+  let n1 = expval_num $ value_of exp1 env
+      n2 = expval_num $ value_of exp2 env
+    in Bool_Val (n1 < n2)
 --
-
 value_of_program :: Exp -> ExpVal
 value_of_program exp = 
   value_of exp initEnv
 
---
 initEnv :: Env
 initEnv = extend_env "i" (Num_Val 1) 
             (extend_env "v" (Num_Val 5)
               (extend_env "x" (Num_Val 10) empty_env))
 
---
-apply_procedure :: Proc -> ExpVal -> ExpVal
-apply_procedure (Procedure var body env) arg =
-  value_of body $ extend_env var arg env
-  -- value_of body arg
+          
+

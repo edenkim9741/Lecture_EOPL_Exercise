@@ -3,6 +3,15 @@
 # For more information, please see the documentation at:
 #   https://docs.haskellstack.org/en/stable/lock_files
 
+snapshots:
+- completed:
+    sha256: cbd5e8593869445794924668479b5bd9f1738d075898623dceacc13b2576b6e3
+    size: 617355
+    url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/23/18.yaml
+  original:
+    url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/23/18.yaml
+
+
 packages:
 - completed:
     hackage: yapb-0.2.3@sha256:d219b1ff4195682af24ae07b415b119ff164281444f0bcfcac9ed8550c850f40,4744
@@ -11,10 +20,3 @@ packages:
       size: 3920
   original:
     hackage: yapb-0.2.3
-snapshots:
-- completed:
-    sha256: cbd5e8593869445794924668479b5bd9f1738d075898623dceacc13b2576b6e3
-    size: 617355
-    url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/19/1.yaml
-  original:
-    url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/19/1.yaml
